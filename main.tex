@@ -1,0 +1,74 @@
+\documentclass[11pt,a4paper]{article}
+
+% ---------- Packages ----------
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{color}
+\usepackage{titlesec}
+\usepackage{listings}
+\usepackage{tocloft}
+\usepackage{amsmath, amssymb}
+
+% ---------- Page Setup ----------
+\geometry{margin=1.5cm}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{4pt}
+\renewcommand{\cftsecleader}{\cftdotfill{\cftdotsep}}
+
+% ---------- Section Formatting ----------
+\titleformat{\section}{\large\bfseries}{}{0em}{}[\titlerule]
+\titleformat{\subsection}{\normalsize\bfseries}{}{0em}{}
+
+% ---------- Listings (C++ Syntax Highlighting) ----------
+\definecolor{cppblue}{RGB}{36,36,255}
+\definecolor{cppgreen}{RGB}{0,150,0}
+\definecolor{cppred}{RGB}{180,0,0}
+\definecolor{cppgray}{RGB}{100,100,100}
+\definecolor{cppbg}{RGB}{250,250,250}
+
+\lstdefinestyle{cpp}{
+  language=C++,
+  backgroundcolor=\color{cppbg},
+  basicstyle=\ttfamily\small,
+  keywordstyle=\color{cppblue}\bfseries,
+  stringstyle=\color{cppred},
+  commentstyle=\color{cppgreen}\itshape,
+  numbers=left,
+  numberstyle=\tiny\color{cppgray},
+  stepnumber=1,
+  numbersep=6pt,
+  frame=single,
+  showstringspaces=false,
+  tabsize=2,
+  breaklines=true,
+  captionpos=b
+}
+
+\lstset{style=cpp}
+
+% ---------- Title ----------
+\title{NPCsCompetitive Programming CookBook}
+\author{Sergio Pimentel, Anhuar Maldonado, Javier Cuatepotzo}
+\date{}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+\newpage
+
+% ---------- Section: Templates ----------
+\input{sections/main_template.tex}
+
+% ---------- Section: Math ----------
+\input{sections/math.tex}
+
+% ---------- Section: Nomenclature ----------
+\input{sections/nomenclature.tex}
+
+% ---------- Section: Graphs ----------
+\input{sections/graph_algorithm}
+
+\end{document}

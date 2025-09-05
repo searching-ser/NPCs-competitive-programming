@@ -1,0 +1,23 @@
+
+\section{Graph Algorithms}
+
+\subsection{BFS}
+\begin{lstlisting}
+vector<int> adj[N];
+bool visited[N];
+
+void bfs(int start) {
+    queue<int> q;
+    q.push(start);
+    visited[start] = true;
+    while (!q.empty()) {
+        int u = q.front(); q.pop();
+        for (int v : adj[u]) {
+            if (!visited[v]) {
+                visited[v] = true;
+                q.push(v);
+            }
+        }
+    }
+}
+\end{lstlisting}
