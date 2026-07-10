@@ -9,7 +9,18 @@ fi
 for pdf in "$@"; do
   test -s "$pdf"
   pdfinfo "$pdf" | grep -q '^Pages:[[:space:]]*[1-9]'
-  pdfinfo "$pdf" | grep -q '^Page size:[[:space:]]*595.*841.*A4'
+  case "$pdf" in
+    *landscape*)
+      pdfinfo "$pdf" | grep -q '^Page size:[[:space:]]*841.*595.*A4'
+      ;;
+    *portrait*)
+      pdfinfo "$pdf" | grep -q '^Page size:[[:space:]]*595.*841.*A4'
+      ;;
+    *)
+      echo "PDF filename does not identify its layout: $pdf" >&2
+      exit 1
+      ;;
+  esac
   pdfinfo "$pdf" | grep -q '^Title:[[:space:]]*NPCs Competitive Programming Codebook'
 
   if command -v pdffonts >/dev/null 2>&1; then

@@ -16,17 +16,24 @@
 \RequirePackage{xcolor}
 \RequirePackage{hyperref}
 \RequirePackage{microtype}
+\RequirePackage{multicol}
 \RequirePackage{needspace}
 \RequirePackage{tabularx}
 \RequirePackage{titlesec}
 \RequirePackage{tocloft}
 \RequirePackage{minted}
 
-% A single column keeps code tokens intact. Density comes from compact spacing.
-\geometry{top=1.15cm,bottom=1.25cm,left=1.2cm,right=1.2cm}
+% Portrait favors maximum line width; landscape uses two scan-friendly columns.
+\ifdefined\CodebookLandscape
+  \geometry{a4paper,landscape,top=0.9cm,bottom=1.0cm,left=0.9cm,right=0.9cm}
+  \setlength{\columnsep}{0.7cm}
+  \setlength{\columnseprule}{0.2pt}
+\else
+  \geometry{a4paper,top=1.15cm,bottom=1.25cm,left=1.2cm,right=1.2cm}
+  \setlength{\columnsep}{0.7cm}
+\fi
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{2pt plus 1pt minus 1pt}
-\setlength{\columnsep}{0.7cm}
 
 \titleformat{\section}{\large\bfseries}{}{0pt}{}[\titlerule]
 \titleformat{\subsection}{\normalsize\bfseries}{}{0pt}{}
@@ -78,3 +85,10 @@
 }
 
 \newcommand{\cppsnippet}[2][]{\inputminted[#1]{cpp}{#2}}
+
+% Start selected standalone topics on the next scan unit for each layout.
+\ifdefined\CodebookLandscape
+  \newcommand{\codebooklayoutbreak}{\columnbreak}
+\else
+  \newcommand{\codebooklayoutbreak}{\clearpage}
+\fi

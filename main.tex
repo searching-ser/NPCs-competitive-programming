@@ -1,4 +1,8 @@
-\documentclass[10pt,a4paper]{article}
+\ifdefined\CodebookLandscape
+  \documentclass[10pt,a4paper,landscape]{article}
+\else
+  \documentclass[10pt,a4paper]{article}
+\fi
 
 \usepackage{style/codebook}
 
@@ -20,11 +24,19 @@
 \tableofcontents
 \clearpage
 
+\ifdefined\CodebookLandscape
+  \begin{multicols}{2}
+\fi
+
 \input{sections/main_template.tex}
 \input{sections/lambda_functions.tex}
 \input{sections/math.tex}
 \input{sections/nomenclature.tex}
 \input{sections/graph_algorithm.tex}
 \input{sections/misc.tex}
+
+\ifdefined\CodebookLandscape
+  \end{multicols}
+\fi
 
 \end{document}

@@ -8,15 +8,18 @@ algorithm notes, formulas, terminology, and tested GNU C++17 snippets.
 
 LaTeX is the typesetting/PDF backend. `minted` 3 delegates syntax tokenization to
 Pygments, while `\inputminted` ensures the code printed in the book is the same code
-compiled by the test suite. The supported build produces both color and monochrome
-PDFs in `build/`; generated PDFs are CI artifacts and are not source-controlled.
+compiled by the test suite. The supported build produces selectable landscape/two-column
+or portrait/single-column PDFs in both color and monochrome under `build/`; generated
+PDFs are CI artifacts and are not source-controlled.
 
 ## Repository structure
 
 ```text
 .
-├── main.tex                         # Color-profile document entry point and section order
-├── monochrome.tex                   # Defines monochrome mode, then inputs main.tex
+├── main.tex                         # Shared content and portrait/color entry point
+├── monochrome.tex                   # Portrait/monochrome wrapper
+├── landscape.tex                    # Landscape/two-column color wrapper
+├── landscape-monochrome.tex         # Landscape/two-column monochrome wrapper
 ├── style/
 │   └── codebook.sty                 # Geometry, typography, headings, TOC, minted defaults
 ├── sections/
@@ -50,12 +53,18 @@ Run all commands from the repository root.
 
 ```sh
 make check        # Strict compile, functional tests, template release/debug checks
-make color        # build/codebook-color.pdf
-make monochrome   # build/codebook-monochrome.pdf
-make pdf          # Both PDFs and available PDF checks
-make all          # C++ checks, then PDF build
+make pdf          # Default landscape layout, both print profiles and PDF checks
+make landscape    # Landscape/two-column color and monochrome PDFs
+make portrait     # Portrait/single-column color and monochrome PDFs
+make pdf-all      # All four layout/profile combinations
+make color        # Color profile for LAYOUT (default: landscape)
+make monochrome   # Monochrome profile for LAYOUT
+make all          # C++ checks, then default landscape PDF build
 make clean        # Remove generated output
 ```
+
+Set `LAYOUT=landscape` or `LAYOUT=portrait` when building an individual profile.
+Output names include the selected layout and profile. CI builds all four combinations.
 
 `make check` uses `CXX` (default `g++`) with GNU C++17, optimization, warnings, and
 `-Werror`. Set `CXX=g++-15` or another GNU compiler when the platform's `g++` alias is
@@ -65,18 +74,19 @@ The PDF build requires `latexmk`, a current LaTeX distribution, `minted` 3, and
 Python 3.8+. TeX Live 2024+ trusts `latexminted` through restricted shell escape;
 older TeX Live and MiKTeX may need explicit permission. Do not add unrestricted
 `-shell-escape` to the default build. CI uses the date-pinned
-`danteev/texlive:2026-07-01` image and uploads both PDFs as workflow artifacts.
+`danteev/texlive:2026-07-01` image and uploads all four PDFs as workflow artifacts.
 
 `scripts/check_pdf.sh` uses `pdfinfo` and `pdffonts` when available. It checks nonempty
 A4 PDFs, title metadata, and font embedding. Visual inspection is still required.
 
 ## Important files and ownership
 
-- `main.tex` owns title/author metadata and document section order. It should remain a
-  small orchestration file.
+- `main.tex` owns title/author metadata, document section order, and the conditional
+  two-column body. It should remain a small orchestration file.
 - `style/codebook.sty` owns all global page, heading, TOC, hyperlink, and code-listing
   presentation. Do not put competing global style rules in topic files.
-- `monochrome.tex` is a thin wrapper. Both profiles must contain identical content.
+- The profile/layout `.tex` entry points are thin wrappers. Every combination must
+  contain identical topic content.
 - `sections/*.tex` owns prose, formulas, headings, and references to canonical snippets.
 - `snippets/cpp/*` is the single source of truth for printable code. Do not duplicate
   these implementations inside LaTeX.
@@ -97,9 +107,9 @@ A4 PDFs, title metadata, and font embedding. Visual inspection is still required
   that obscures token boundaries.
 - Keep one canonical code copy and consume it from both LaTeX and tests.
 - Prefer deterministic, documented builds over editor-specific setup.
-- Keep the single-column body unless representative snippets demonstrate that a denser
-  layout does not force unsafe line wrapping. Reduce whitespace before reducing code to
-  an unreadable size.
+- Landscape/two-column is the default layout; portrait/single-column remains supported.
+  Keep representative snippets safe in both. Reduce whitespace before shrinking code
+  to an unreadable size, and never rely on arbitrary token splitting.
 
 ## Coding conventions
 
@@ -138,9 +148,10 @@ A4 PDFs, title metadata, and font embedding. Visual inspection is still required
 4. Add functional or compile coverage under `tests/`.
 5. Reference the canonical path from the section with `\cppsnippet`.
 6. Run `make check` with GCC, including release/debug checks when relevant.
-7. Run `make pdf` with the supported TeX toolchain.
-8. Inspect both PDFs at 100%/actual size: title and TOC, longest lines, formulas,
-   heading/listing transitions, page bottoms, final page, and grayscale contrast.
+7. Run `make pdf-all` with the supported TeX toolchain.
+8. Inspect all four PDFs at 100%/actual size: title and TOC, longest lines, formulas,
+   column flow, heading/listing transitions, page bottoms, final page, and grayscale
+   contrast.
 9. Inspect the LaTeX log for errors, missing glyphs/references, and overfull boxes.
 10. Update README/AGENTS when the public build contract or structure changes.
 
@@ -157,7 +168,7 @@ what was not verified.
   converts it through xcolor's `gray` model. A project-owned token theme may eventually
   provide tighter control over print contrast.
 - The general template is rendered at `\tiny` to control page count; actual-size print
-  review should determine whether it needs a dedicated landscape or multi-column page.
+  review must confirm it remains legible in both supported layouts.
 - The test suite combines compatible fragments into one translation unit but does not
   yet test every edge constraint or overflow boundary.
 - CI pins a dated TeX Live image tag, not an immutable image digest or action commit SHA.
@@ -190,7 +201,8 @@ what was not verified.
   checks both definition and value.
 - Do not enable unrestricted shell escape by default. Configure `latexminted` as the
   permitted executable on older toolchains.
-- Do not use two columns or arbitrary line breaking without inspecting real long code.
+- Do not change column width or enable arbitrary line breaking without inspecting real
+  long code in both layouts.
 - Do not judge colors only on a backlit screen; inspect the monochrome PDF and paper.
 - Do not commit `build/`, `_minted-*`, LaTeX auxiliaries, or locally generated PDFs.
 - Do not assume `make pdf` ran successfully merely because C++ tests passed; the
@@ -203,6 +215,6 @@ what was not verified.
   migration.
 - GNU C++17 is the intended contest environment.
 - `snippets/cpp/` is canonical; sections are presentation and explanation only.
-- Color and monochrome profiles must remain content-identical.
+- All layout and color profiles must remain content-identical.
 - Generated PDFs are CI/local artifacts and should not be committed.
 - Untracked reference documents are user-owned and outside normal task scope.
