@@ -8,6 +8,8 @@ using ll = long long;
 #include "../snippets/cpp/gcd_lcm.cpp"
 #include "../snippets/cpp/bfs.cpp"
 #include "../snippets/cpp/print_space_separated.cpp"
+#include "../snippets/cpp/lambda_captures.cpp"
+#include "../snippets/cpp/lambda_sort.cpp"
 
 int main() {
   configure_fast_io();
@@ -26,6 +28,25 @@ int main() {
   const vector<vector<int>> graph = {
       {1, 2}, {0, 3}, {0}, {1}, {}};
   assert((bfs_distances(graph, 0) == vector<int>{0, 1, 1, 2, -1}));
+
+  assert(lambda_no_capture(2, 3) == 5);
+  assert(lambda_default_value_capture(4, 7) == 11);
+
+  int x = 4;
+  int y = 9;
+  lambda_default_reference_capture(x, y);
+  assert(x == 5 && y == 10);
+  assert(lambda_explicit_value_capture(6) == 12);
+  lambda_explicit_reference_capture(x);
+  assert(x == 6);
+
+  vector<int> lambda_sorted = {4, 1, 7, 4};
+  sort_descending_with_lambda(lambda_sorted);
+  assert((lambda_sorted == vector<int>{7, 4, 4, 1}));
+
+  vector<int> function_sorted = {4, 1, 7, 4};
+  sort_descending_with_function(function_sorted);
+  assert(function_sorted == lambda_sorted);
 
   ostringstream captured;
   streambuf* previous = cout.rdbuf(captured.rdbuf());

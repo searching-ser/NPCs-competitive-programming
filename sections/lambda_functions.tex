@@ -1,0 +1,49 @@
+\clearpage
+\section{C++ Lambda Functions}
+
+A lambda is a small function object defined where it is used. Its general form is
+
+\mintinline{cpp}|auto name = [captures](parameters) -> return_type { body };|
+
+\begin{description}
+  \item[Capture list] \texttt{[captures]} selects automatic variables from the
+    surrounding scope. An empty list captures nothing; captures may copy a value or
+    refer to the original variable.
+  \item[Parameters] \texttt{(parameters)} are the lambda's inputs, just like a
+    function's parameters. The parentheses may be empty.
+  \item[Return type] \texttt{-> return\_type} is optional. Usually the compiler
+    infers it from the lambda's \texttt{return} statements.
+  \item[Body] \texttt{\{ body \}} contains the statements run each time the lambda
+    is called.
+\end{description}
+
+\subsection{Common Capture Modes}
+
+Only variables actually used by a lambda are captured by the defaults
+\texttt{[=]} and \texttt{[\&]}. Copies do not change the original variable;
+references can change it and must not outlive it.
+
+\begin{tabularx}{\textwidth}{@{}lX@{}}
+  \texttt{[]} & Capture nothing. Surrounding local variables are unavailable. \\
+  \texttt{[=]} & Copy each used surrounding variable. \\
+  \texttt{[\&]} & Refer to each used surrounding variable. \\
+  \texttt{[x]} & Copy only \texttt{x}. \\
+  \texttt{[\&x]} & Refer only to \texttt{x}. \\
+\end{tabularx}
+
+\cppsnippet{snippets/cpp/lambda_captures.cpp}
+
+\subsection{Sorting with a Lambda}
+
+\texttt{std::sort(first, last, comparator)} calls the comparator with two elements.
+It must return \texttt{true} exactly when the left element belongs before the right
+one. For descending integers, that means \texttt{lhs > rhs}. Equal elements must
+compare \texttt{false}; more generally, the comparator must define a strict weak
+ordering. Sorting takes $O(n \log n)$ comparisons.
+
+The captureless lambda and the named function below express the same ordering. The
+lambda keeps a short, one-use rule beside the call and can capture local settings when
+needed. The named function is easier to reuse, document, and test independently, but
+it cannot directly capture local variables.
+
+\cppsnippet{snippets/cpp/lambda_sort.cpp}
