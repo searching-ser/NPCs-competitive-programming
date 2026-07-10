@@ -1,0 +1,74 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{codebook}[2026/07/09 NPCs printable codebook style]
+
+\RequirePackage[T1]{fontenc}
+\RequirePackage[utf8]{inputenc}
+\RequirePackage{amsmath}
+\RequirePackage{amssymb}
+\RequirePackage{etoolbox}
+\RequirePackage{geometry}
+\RequirePackage{hyperref}
+\RequirePackage{microtype}
+\RequirePackage{needspace}
+\RequirePackage{tabularx}
+\RequirePackage{titlesec}
+\RequirePackage{tocloft}
+\RequirePackage{xcolor}
+\RequirePackage{minted}
+
+% A single column keeps code tokens intact. Density comes from compact spacing.
+\geometry{top=1.15cm,bottom=1.25cm,left=1.2cm,right=1.2cm}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{2pt plus 1pt minus 1pt}
+\setlength{\columnsep}{0.7cm}
+
+\titleformat{\section}{\large\bfseries}{}{0pt}{}[\titlerule]
+\titleformat{\subsection}{\normalsize\bfseries}{}{0pt}{}
+\titlespacing*{\section}{0pt}{1.0em}{0.35em}
+\titlespacing*{\subsection}{0pt}{0.75em}{0.2em}
+
+% Keep a heading with enough of its following explanation/listing to be useful.
+\pretocmd{\section}{\Needspace{12\baselineskip}}{}{}
+\pretocmd{\subsection}{\Needspace{9\baselineskip}}{}{}
+
+\renewcommand{\cftsecleader}{\cftdotfill{\cftdotsep}}
+\setlength{\cftbeforesecskip}{1pt}
+\setlength{\cftbeforesubsecskip}{0pt}
+
+\hypersetup{
+  colorlinks=false,
+  hidelinks,
+  pdfdisplaydoctitle=true,
+  bookmarksopen=true,
+  bookmarksnumbered=true
+}
+
+% Color is optional information. The monochrome profile removes it completely.
+\ifdefined\CodebookMonochrome
+  \definecolor{codebackground}{gray}{0.98}
+  \usemintedstyle{bw}
+\else
+  \definecolor{codebackground}{RGB}{248,249,250}
+  % Friendly is a restrained light-background Pygments style.
+  \usemintedstyle{friendly}
+\fi
+
+\setminted{
+  autogobble=true,
+  bgcolor=codebackground,
+  breaklines=true,
+  breakanywhere=false,
+  encoding=utf8,
+  fontsize=\scriptsize,
+  frame=lines,
+  framesep=2mm,
+  linenos=true,
+  numberblanklines=false,
+  numbersep=5pt,
+  samepage=false,
+  showspaces=false,
+  showtabs=false,
+  tabsize=2
+}
+
+\newcommand{\cppsnippet}[2][]{\inputminted[#1]{cpp}{#2}}

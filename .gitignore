@@ -1,3 +1,9 @@
+# Local/generated build output
+/build/
+/main.pdf
+/_minted-*/
+
+# Legacy in-place LaTeX auxiliary files
 main.aux
 main.fdb_latexmk
 main.fls
@@ -5,3 +11,6 @@ main.log
 main.out
 main.synctex.gz
 main.toc
+
+# macOS metadata
+.DS_Store

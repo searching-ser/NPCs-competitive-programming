@@ -1,7 +1,7 @@
 #include <bits/stdc++.h>
 
-// #define DEBUG 0
-#ifdef DEBUG
+// Compile with -DDEBUG=1 to enable debug output.
+#if defined(DEBUG) && DEBUG
 #  include "debugging.h"
 #else
 #  define de(...)
@@ -40,7 +40,7 @@ using vvl  = vector<vl>;
 #define pr(x) cout << x << ' '
 
 constexpr int INF  = 1e9;
-constexpr ll  LINF = (ll)4e18;
+constexpr ll  LINF = 4'000'000'000'000'000'000LL;
 constexpr int MOD  = 1'000'000'007;
 // constexpr int MOD = 998244353;
 
@@ -81,7 +81,7 @@ istream &operator>>(istream &is, pair<A, B> &p) {
   return is >> p.first >> p.second;
 }
 
-#ifndef DEBUG
+#if !defined(DEBUG) || !DEBUG
 template <class A, class B>
 ostream &operator<<(ostream &os, const pair<A, B> &p) {
   return os << p.first << ' ' << p.second;
@@ -101,8 +101,6 @@ ostream &operator<<(ostream &os, const vec<T> &a) {
 int  n, m, u, v;
 vi   elements;
 void solve() {
-
-
   return;
 }
 

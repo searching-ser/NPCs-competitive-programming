@@ -1,9 +1,15 @@
+#pragma once
+
+#include <cstddef>
 #include <deque>
 #include <iostream>
+#include <iterator>
 #include <map>
 #include <set>
+#include <tuple>
 #include <unordered_map>
 #include <unordered_set>
+#include <utility>
 #include <vector>
 
 template <typename T>
@@ -13,7 +19,7 @@ std::ostream &operator<<(std::ostream &out, const std::vector<T> &vec) {
     return out;
   }
   out << '[';
-  for (int i = 0; i < vec.size() - 1; i++) {
+  for (std::size_t i = 0; i + 1 < vec.size(); ++i) {
     out << vec[i] << ", ";
   }
   return out << vec.back() << ']';
@@ -31,7 +37,7 @@ std::ostream &operator<<(std::ostream &out, const std::deque<T> &deq) {
     return out;
   }
   out << '[';
-  for (int i = 0; i < deq.size() - 1; i++) {
+  for (std::size_t i = 0; i + 1 < deq.size(); ++i) {
     out << deq[i] << ", ";
   }
   return out << deq.back() << ']';
@@ -117,45 +123,33 @@ std::ostream &operator<<(std::ostream &out, const std::set<T> &set) {
   return out << '}';
 }
 
-// Source: https://stackoverflow.com/a/31116392/12128483
-template <typename Type, unsigned N, unsigned Last>
-struct TuplePrinter {
-  static void print(std::ostream &out, const Type &value) {
-    out << std::get<N>(value) << ", ";
-    TuplePrinter<Type, N + 1, Last>::print(out, value);
-  }
-};
-
-template <typename Type, unsigned N>
-struct TuplePrinter<Type, N, N> {
-  static void print(std::ostream &out, const Type &value) {
-    out << std::get<N>(value);
-  }
-};
-
 template <typename... Types>
 std::ostream &operator<<(std::ostream &out, const std::tuple<Types...> &value) {
   out << '(';
-  TuplePrinter<std::tuple<Types...>, 0, sizeof...(Types) - 1>::print(out,
-                                                                     value);
+  std::size_t index = 0;
+  std::apply(
+      [&](const auto &...elements) {
+        ((out << (index++ == 0 ? "" : ", ") << elements), ...);
+      },
+      value);
   return out << ')';
 }
 
-inline void __dbg_out() {
+inline void debug_out() {
   std::cerr << '\n';
 }
 
 template <typename Head, typename... Tail>
-inline void __dbg_out(const Head &head, const Tail &...tail) {
+inline void debug_out(const Head &head, const Tail &...tail) {
   std::cerr << head;
   if constexpr (sizeof...(tail) > 0) {
     std::cerr << ", ";
   }
-  __dbg_out(tail...);
+  debug_out(tail...);
 }
 
 #define de(...)                                                                \
   do {                                                                         \
     std::cerr << "[" << #__VA_ARGS__ << "] = ";                                \
-    __dbg_out(__VA_ARGS__);                                                    \
+    debug_out(__VA_ARGS__);                                                    \
   } while (0)

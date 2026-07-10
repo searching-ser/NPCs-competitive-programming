@@ -1,23 +1,20 @@
 \section{Code Templates}
 
+\subsection{General GNU C++17 Template}
+
+Compile with \texttt{-DDEBUG=1} to enable the helpers from
+\texttt{snippets/cpp/debugging.h}. The normal contest build removes debug calls.
+
+\cppsnippet[fontsize=\tiny]{snippets/cpp/template.cpp}
+
 \subsection{Fast I/O}
-\begin{lstlisting}
-// Fast input-output
-ios::sync_with_stdio(false);
-cin.tie(nullptr);
-\end{lstlisting}
+
+Call once at the start of \texttt{main}, before performing any input or output.
+
+\cppsnippet{snippets/cpp/fast_io.cpp}
 
 \subsection{Binary Search}
-\begin{lstlisting}
-// Standard Binary Search
-int binary_search(vector<int>& arr, int x) {
-    int l = 0, r = arr.size()-1;
-    while (l <= r) {
-        int mid = (l+r)/2;
-        if (arr[mid] == x) return mid;
-        if (arr[mid] < x) l = mid+1;
-        else r = mid-1;
-    }
-    return -1;
-}
-\end{lstlisting}
+
+The input must be sorted in nondecreasing order. Complexity: $O(\log n)$.
+
+\cppsnippet{snippets/cpp/binary_search.cpp}

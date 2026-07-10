@@ -1,20 +1,19 @@
-% ---------- Section: Math ----------
 \section{Mathematics}
 
 \subsection{Formulas}
+
 \begin{itemize}
-  \item Quadratic Formula: \[
-    x = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a}
-  \]
-  \item Modular exponentiation:
-  \[
-    a^b \bmod m
-  \]
+  \setlength\itemsep{0pt}
+  \item Quadratic formula:
+    \[
+      x = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a}
+    \]
+  \item Modular exponentiation: $a^b \bmod m$.
 \end{itemize}
 
-\subsection{Number Theory Snippet}
-\begin{lstlisting}
-// GCD and LCM
-int gcd(int a, int b) { return b==0 ? a : gcd(b,a%b); }
-int lcm(int a, int b) { return a/gcd(a,b)*b; }
-\end{lstlisting}
+\subsection{Greatest Common Divisor and Least Common Multiple}
+
+Inputs are assumed to be non-negative. Dividing before multiplication reduces, but
+does not eliminate, overflow risk in the LCM.
+
+\cppsnippet{snippets/cpp/gcd_lcm.cpp}
