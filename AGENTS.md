@@ -153,8 +153,9 @@ what was not verified.
 - There is no automated visual regression comparison; PDF checks are structural only.
 - The checked PDF is untagged unless the selected LaTeX engine/package versions add
   tagging; PDF/UA and archival conformance are not configured.
-- Pygments' built-in `friendly` theme is used for color output. A project-owned token
-  theme may eventually provide tighter control over print contrast.
+- Pygments' built-in `friendly` theme is used for both profiles; the monochrome build
+  converts it through xcolor's `gray` model. A project-owned token theme may eventually
+  provide tighter control over print contrast.
 - The general template is rendered at `\tiny` to control page count; actual-size print
   review should determine whether it needs a dedicated landscape or multi-column page.
 - The test suite combines compatible fragments into one translation unit but does not

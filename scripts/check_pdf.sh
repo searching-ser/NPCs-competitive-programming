@@ -13,7 +13,16 @@ for pdf in "$@"; do
   pdfinfo "$pdf" | grep -q '^Title:[[:space:]]*NPCs Competitive Programming Codebook'
 
   if command -v pdffonts >/dev/null 2>&1; then
-    if pdffonts "$pdf" | tail -n +3 | awk '$4 != "yes" { exit 1 }'; then
+    # Font types such as "Type 1" contain spaces, so the `emb` column does not
+    # have a fixed field number. Read it relative to the five stable trailing
+    # columns: emb, sub, uni, object ID, and generation ID.
+    if pdffonts "$pdf" | tail -n +3 | awk '
+      NF >= 5 && $(NF - 4) != "yes" {
+        print "Non-embedded font row: " $0 > "/dev/stderr"
+        failed = 1
+      }
+      END { exit failed }
+    '; then
       :
     else
       echo "PDF contains a font that is not embedded: $pdf" >&2
