@@ -1,16 +1,39 @@
-# Local/generated build output
-/build/
-/main.pdf
-/_minted-*/
+# Core LaTeX auxiliary files
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.log
+*.out
+*.toc
+*.synctex.gz
+*.fls
+*.fdb_latexmk
+*.xdv
+*.nav
+*.snm
+*.vrb
 
-# Legacy in-place LaTeX auxiliary files
-main.aux
-main.fdb_latexmk
-main.fls
-main.log
-main.out
-main.synctex.gz
-main.toc
+# Bibliography and index files
+*.idx
+*.ilg
+*.ind
+*.nlo
+*.nls
+*.glg
+*.glo
+*.gist
+*.ist
+
+# PDF output (optional: uncomment if you prefer not to track compiled PDFs)
+# *.pdf
+
+# IDE and Editor specific files
+.vscode/
+*.sublime-workspace
+*.sublime-project
+*.tex.bak
+*.backup
 
 # macOS metadata
 .DS_Store

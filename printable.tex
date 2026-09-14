@@ -1,0 +1,196 @@
+\documentclass[10pt,a4paper,twocolumn]{article}
+
+% Choose font loading depending on engine. For XeLaTeX/LuaLaTeX, use fontspec
+% and set the monospaced font to JetBrains Mono Nerd Font. Compile with
+% `xelatex` or `lualatex` to enable system fonts.
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[utf8]{inputenc}
+  \usepackage[T1]{fontenc}
+  \usepackage{lmodern}
+\else
+  \usepackage{fontspec}
+  % Use the installed JetBrains Mono Nerd Font mono family name from fc-list
+  \setmonofont{JetBrainsMono Nerd Font Mono}[Scale=MatchLowercase]
+\fi
+\usepackage[margin=1.0cm,columnsep=0.7cm,headheight=14pt,headsep=12pt,footskip=12pt]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\usepackage{array}
+\usepackage[plainpages=false,pdfpagelabels]{hyperref}
+\usepackage{underscore}
+
+\raggedbottom
+
+% --- Print-optimized high-contrast colors ---------------------------------
+\definecolor{codegray}{rgb}{0.40,0.40,0.40}
+\definecolor{codekw}  {rgb}{0.00,0.05,0.55} % deep navy (sharp on print/grayscale)
+\definecolor{codestr} {rgb}{0.65,0.08,0.08} % deep burgundy
+\definecolor{codecmt} {rgb}{0.18,0.40,0.18} % dark olive/slate green
+\definecolor{codebg}  {rgb}{1.00,1.00,1.00} % pure white (no gray wash/wasted toner)
+\definecolor{coderule}{rgb}{0.80,0.80,0.80}
+
+\lstset{
+  basicstyle      =\ttfamily\scriptsize,
+  numbers         =left,
+  numberstyle     =\tiny\color{codegray},
+  numbersep       =4pt,
+  keywordstyle    =\color{codekw}\bfseries,
+  stringstyle     =\color{codestr},
+  commentstyle    =\color{codecmt}\itshape,
+  backgroundcolor =\color{codebg},
+  frame           =lines,
+  rulecolor       =\color{coderule},
+  breaklines      =true,
+  breakatwhitespace=false,
+  postbreak       =\mbox{\textcolor{codegray}{$\hookrightarrow$}\space},
+  showstringspaces=false,
+  tabsize         =2,
+  language        =C++,
+  captionpos      =b,
+  xleftmargin     =1.4em,
+  xrightmargin    =0pt,
+  extendedchars   =true,
+  inputencoding   =utf8,
+  literate=
+    {á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1
+    {Á}{{\'A}}1 {É}{{\'E}}1 {Í}{{\'I}}1 {Ó}{{\'O}}1 {Ú}{{\'U}}1
+    {ñ}{{\~n}}1 {Ñ}{{\~N}}1
+    {—}{{---}}1 {–}{{--}}1 {…}{{\ldots}}1 {·}{{$\cdot$}}1
+    {→}{{$\rightarrow$}}1 {←}{{$\leftarrow$}}1
+    {≤}{{$\leq$}}1 {≥}{{$\geq$}}1 {π}{{$\pi$}}1 {∞}{{$\infty$}}1
+    {✓}{{$\checkmark$}}1 {✗}{{$\times$}}1
+    {“}{{``}}1 {”}{{''}}1 {‘}{{`}}1 {’}{{'}}1
+}
+
+% Extra C++23/C++20 keywords listings doesn't know about by default.
+\lstset{morekeywords={
+  concept,requires,co_await,co_yield,co_return,
+  consteval,constinit,char8_t,
+  ranges,views,format,print,println,expected,flat_map,flat_set,
+  to_underlying,bit_width,bit_ceil,bit_floor,popcount,countl_zero,countr_zero
+}}
+
+% Header and Footer configuration for clean printing
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0pt}
+\fancyhead[L]{\ttfamily\footnotesize \leftmark}
+\fancyhead[R]{\ttfamily\footnotesize Page \thepage\ of \pageref{LastPage}}
+
+% Helper to include source file
+\newcommand{\codefile}[1]{%
+  \lstinputlisting{\detokenize{#1}}%
+}
+
+\begin{document}
+
+% --- Dedicated First Page: Title & Table of Contents ---
+\pagenumbering{roman}
+\onecolumn
+\thispagestyle{empty}
+{
+  \centering
+  {\LARGE\bfseries \texttt{cpp/} Competitive Programming Notebook}\par
+  \vspace{0.6em}
+  \hrule
+  \vspace{1.2em}
+}
+\tableofcontents
+\clearpage
+
+% --- Code Section (Two Columns, Arabic Numbering from Page 1) ---
+\pagenumbering{arabic}
+\twocolumn
+
+% === Topic 1: Base Template ===
+\clearpage
+\section{Competitive Programming Template}
+% \noindent{\scriptsize\textbf{Overview:} Fast I/O, type aliases (\texttt{ll}, \texttt{pii}, \texttt{vi}, \texttt{vl}, \texttt{vvi}), compile-time direction pairs \texttt{d4}/\texttt{d8}, 1-line \texttt{chmin}/\texttt{chmax}, and vector stream I/O.}
+\vspace{0.3em}
+\codefile{templates/template.cpp}
+
+% === Topic 2: Lazy Segment Tree ===
+\clearpage
+\section{Customizable Lazy Segment Tree}
+\noindent{\scriptsize\textbf{Customization Recipes:}}
+\vspace{0.2em}
+
+\noindent{\scriptsize
+\begin{tabular}{|l|c|c|l|}
+\hline
+\textbf{Query} & \textbf{\texttt{IDENTITY}} & \textbf{\texttt{combine(a,b)}} & \textbf{\texttt{apply\_lazy}} (Set) \\ \hline
+Sum (RSQ) & \texttt{0} & \texttt{a + b} & \texttt{st[p] = val * len} \\
+Min (RMQ) & \texttt{2e9} / \texttt{4e18} & \texttt{min(a,b)} & \texttt{st[p] = val} \\
+Max (RMaxQ) & \texttt{-2e9} / \texttt{-4e18} & \texttt{max(a,b)} & \texttt{st[p] = val} \\
+GCD & \texttt{0} & \texttt{std::gcd(a,b)} & \texttt{st[p] = val} \\
+\hline
+\end{tabular}
+}
+\vspace{0.3em}
+\codefile{templates/segtree_sum.cpp}
+
+% === Topic 3: Li Chao Tree ===
+\clearpage
+\section{Li Chao Tree / Convex Hull Trick}
+\noindent{\scriptsize
+\textbf{Convex Hull Trick (CHT) Optimization:}\\
+Maintains lower envelope of lines $y = mx + c$ in $O(\log X)$. Optimizes:
+\[ dp[i] = \min_{j < i} (m_j \cdot x_i + c_j) + \text{extra}(i) \]
+\textbf{Quadratic Cost (e.g. Frog 3):} $dp[i] = \min_j \{dp[j] + (h_i - h_j)^2 + C\}$
+\[ \implies m = -2h_j,\quad c = dp[j] + h_j^2,\quad x = h_i,\quad \text{extra} = h_i^2 + C \]
+}
+\vspace{0.3em}
+\codefile{templates/lichao_tree.cpp}
+
+% === Topic 4: Grid Transformations ===
+\clearpage
+\section{Grid Transformations \& Utilities}
+\noindent{\scriptsize\textbf{Coordinate Transformations ($R \times C$):}}
+\vspace{0.2em}
+
+\noindent{\scriptsize
+\begin{tabular}{|l|l|c|}
+\hline
+\textbf{Operation} & \textbf{Mapping} $(r, c) \to$ & \textbf{Dimensions} \\ \hline
+Transpose & $(c, r)$ & $C \times R$ \\
+Rotate 90$^\circ$ CW & $(c, R - 1 - r)$ & $C \times R$ \\
+Rotate 90$^\circ$ CCW & $(C - 1 - c, r)$ & $C \times R$ \\
+Rotate 180$^\circ$ & $(R - 1 - r, C - 1 - c)$ & $R \times C$ \\
+Flip Horiz & $(r, C - 1 - c)$ & $R \times C$ \\
+Flip Vert & $(R - 1 - r, c)$ & $R \times C$ \\
+Anti-Diagonal & $r + c = k$ & $0 \le k < R+C-1$ \\
+Main Diagonal & $r - c = k$ & $-(C-1) \le k < R$ \\
+\hline
+\end{tabular}
+}
+\vspace{0.3em}
+\codefile{templates/grid_transforms.cpp}
+
+% === Topic 5: Text Manipulation, Pattern Matching & Regex ===
+\clearpage
+\section[Text Manipulation \& Regex]{\raggedright Text Manipulation, Pattern Matching \& Regex}
+\noindent{\scriptsize\textbf{Pattern Finding \& Regex Cheatsheet:}}
+\vspace{0.2em}
+
+\noindent{\scriptsize
+\begin{tabular}{|l|>{\raggedright\arraybackslash}p{2.9cm}|l|}
+\hline
+\textbf{Pattern / Regex} & \textbf{Function / Syntax} & \textbf{Complexity / Use} \\ \hline
+\textbf{KMP} & \texttt{kmp\_search(t, pat)} & $O(N + M)$ match \\
+\textbf{Z-Algorithm} & \texttt{z\_search(t, pat)} & $O(N + M)$ LCP \\
+\textbf{Full Match} & \texttt{regex\_match(s, re)} & Exact validation \\
+\textbf{Extract All} & \texttt{sregex\_iterator} & Tokenize / ints \\
+\textbf{Capture Groups} & \texttt{regex\_search(s, m, re)} & \texttt{m[1]}, \texttt{m[2]} \\
+\textbf{Replace} & \texttt{regex\_replace(s, re, f)} & Sanitize string \\
+\hline
+\end{tabular}
+}
+\vspace{0.3em}
+\codefile{templates/string_utils.cpp}
+
+\end{document}
